@@ -4,6 +4,7 @@ const MODES = [
   { id: "terms",     name: "용어 풀이",   fragment: "어려운 전문 용어를 쉽게 정의하고 설명" },
   { id: "math",      name: "수식 해석",   fragment: "수식의 각 기호 의미와 직관적 의미를 해석" },
   { id: "figure",    name: "그래프/표",   fragment: "그래프·표·그림이 나타내는 의미를 해석" },
+  { id: "latex",     name: "수식→LaTeX",  fragment: "모든 수식을 정확한 LaTeX 코드로 변환해 코드블록(```)으로 제시(인라인은 $...$, 별도 식은 $$...$$ 사용)" },
   { id: "translate", name: "한국어 번역", fragment: "텍스트를 자연스러운 한국어로 번역(전문 용어는 원어 병기)" },
   { id: "code",      name: "코드 분석",   fragment: "코드의 동작을 단계별로 설명하고 버그·개선점을 지적" },
   { id: "critique",  name: "비판적 검토", fragment: "주장의 가정·한계·반론·약점을 비판적으로 검토" },

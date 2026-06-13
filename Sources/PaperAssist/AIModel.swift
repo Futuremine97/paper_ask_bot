@@ -44,6 +44,31 @@ enum CaptureMode {
     case fullScreen    // 전체 화면
 }
 
+/// 대화 메시지 (후속 질문을 위한 컨텍스트)
+struct ChatMessage: Identifiable, Codable, Hashable {
+    enum Role: String, Codable { case user, assistant }
+    var id = UUID()
+    var role: Role
+    var text: String
+    var imageBase64: String? = nil   // 첫 사용자 메시지에만 이미지 포함
+    var date: Date = Date()
+}
+
+/// 저장된 분석 세션 (히스토리)
+struct AnalysisSession: Identifiable, Codable, Hashable {
+    var id = UUID()
+    var date = Date()
+    var modelName: String
+    var messages: [ChatMessage]
+
+    /// 첫 사용자 메시지에서 제목 추출
+    var title: String {
+        let firstUser = messages.first(where: { $0.role == .user })?.text ?? "분석"
+        let line = firstUser.split(separator: "\n").first.map(String.init) ?? firstUser
+        return line.count > 40 ? String(line.prefix(40)) + "…" : line
+    }
+}
+
 /// 집중모드 — 여러 개를 동시에 켜면 프롬프트가 그 조합으로 합성됩니다.
 struct FocusMode: Identifiable, Hashable {
     let id: String
@@ -56,6 +81,7 @@ struct FocusMode: Identifiable, Hashable {
         FocusMode(id: "terms",     name: "용어 풀이",     fragment: "어려운 전문 용어를 쉽게 정의하고 설명"),
         FocusMode(id: "math",      name: "수식 해석",     fragment: "수식의 각 기호 의미와 직관적 의미를 해석"),
         FocusMode(id: "figure",    name: "그래프/표",     fragment: "그래프·표·그림이 나타내는 의미를 해석"),
+        FocusMode(id: "latex",     name: "수식→LaTeX",    fragment: "이미지의 모든 수식을 정확한 LaTeX 코드로 변환해 코드블록(```)으로 제시(인라인은 $...$, 별도 식은 $$...$$ 사용)"),
         FocusMode(id: "translate", name: "한국어 번역",   fragment: "텍스트를 자연스러운 한국어로 번역(전문 용어는 원어 병기)"),
         FocusMode(id: "code",      name: "코드 분석",     fragment: "코드의 동작을 단계별로 설명하고 버그·개선점을 지적"),
         FocusMode(id: "critique",  name: "비판적 검토",   fragment: "주장의 가정·한계·반론·약점을 비판적으로 검토"),

@@ -20,34 +20,40 @@ enum AIError: LocalizedError {
     }
 }
 
-/// Anthropic / OpenAI 비전 API를 호출해 이미지를 분석합니다.
+/// Anthropic / OpenAI 비전 + 멀티턴 대화 API 호출.
 struct AIClient {
 
-    static func analyze(model: AIModel, apiKey: String, prompt: String, imagePNG: Data) async throws -> String {
+    /// 대화 메시지 전체를 보내고 마지막 응답 텍스트를 받습니다(후속 질문 지원).
+    static func complete(model: AIModel, apiKey: String, messages: [ChatMessage]) async throws -> String {
         guard !apiKey.isEmpty else { throw AIError.missingKey(model.provider) }
         switch model.provider {
         case .anthropic:
-            return try await callAnthropic(modelID: model.id, apiKey: apiKey, prompt: prompt, imagePNG: imagePNG)
+            return try await callAnthropic(modelID: model.id, apiKey: apiKey, messages: messages)
         case .openai:
-            return try await callOpenAI(modelID: model.id, apiKey: apiKey, prompt: prompt, imagePNG: imagePNG)
+            return try await callOpenAI(modelID: model.id, apiKey: apiKey, messages: messages)
         }
     }
 
     // MARK: - Anthropic
 
-    private static func callAnthropic(modelID: String, apiKey: String, prompt: String, imagePNG: Data) async throws -> String {
-        let b64 = imagePNG.base64EncodedString()
+    private static func callAnthropic(modelID: String, apiKey: String, messages: [ChatMessage]) async throws -> String {
+        var apiMessages: [[String: Any]] = []
+        for m in messages {
+            var content: [[String: Any]] = []
+            if let b64 = m.imageBase64 {
+                content.append(["type": "image",
+                                "source": ["type": "base64", "media_type": "image/png", "data": b64]])
+            }
+            if !m.text.isEmpty {
+                content.append(["type": "text", "text": m.text])
+            }
+            apiMessages.append(["role": m.role.rawValue, "content": content])
+        }
+
         let body: [String: Any] = [
             "model": modelID,
             "max_tokens": 4096,
-            "messages": [[
-                "role": "user",
-                "content": [
-                    ["type": "image",
-                     "source": ["type": "base64", "media_type": "image/png", "data": b64]],
-                    ["type": "text", "text": prompt]
-                ]
-            ]]
+            "messages": apiMessages
         ]
 
         var req = URLRequest(url: URL(string: "https://api.anthropic.com/v1/messages")!)
@@ -75,18 +81,23 @@ struct AIClient {
 
     // MARK: - OpenAI
 
-    private static func callOpenAI(modelID: String, apiKey: String, prompt: String, imagePNG: Data) async throws -> String {
-        let b64 = imagePNG.base64EncodedString()
-        let dataURL = "data:image/png;base64,\(b64)"
+    private static func callOpenAI(modelID: String, apiKey: String, messages: [ChatMessage]) async throws -> String {
+        var apiMessages: [[String: Any]] = []
+        for m in messages {
+            if let b64 = m.imageBase64 {
+                var content: [[String: Any]] = []
+                if !m.text.isEmpty { content.append(["type": "text", "text": m.text]) }
+                content.append(["type": "image_url",
+                                "image_url": ["url": "data:image/png;base64,\(b64)"]])
+                apiMessages.append(["role": m.role.rawValue, "content": content])
+            } else {
+                apiMessages.append(["role": m.role.rawValue, "content": m.text])
+            }
+        }
+
         let body: [String: Any] = [
             "model": modelID,
-            "messages": [[
-                "role": "user",
-                "content": [
-                    ["type": "text", "text": prompt],
-                    ["type": "image_url", "image_url": ["url": dataURL]]
-                ]
-            ]]
+            "messages": apiMessages
         ]
 
         var req = URLRequest(url: URL(string: "https://api.openai.com/v1/chat/completions")!)
