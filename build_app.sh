@@ -25,6 +25,11 @@ mkdir -p "${APP_DIR}/Contents/MacOS"
 mkdir -p "${APP_DIR}/Contents/Resources"
 cp "$BIN_PATH" "${APP_DIR}/Contents/MacOS/${EXEC_NAME}"
 
+# 앱 아이콘 생성
+if [ -d "assets/AppIcon.iconset" ] && command -v iconutil >/dev/null 2>&1; then
+  iconutil -c icns "assets/AppIcon.iconset" -o "${APP_DIR}/Contents/Resources/AppIcon.icns" && echo "  ✓ 아이콘 적용"
+fi
+
 echo "▶︎ 3/4  Info.plist 작성 중…"
 cat > "${APP_DIR}/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
@@ -47,8 +52,8 @@ cat > "${APP_DIR}/Contents/Info.plist" <<PLIST
     <string>APPL</string>
     <key>LSMinimumSystemVersion</key>
     <string>13.0</string>
-    <key>LSUIElement</key>
-    <true/>
+    <key>CFBundleIconFile</key>
+    <string>AppIcon</string>
     <key>NSHighResolutionCapable</key>
     <true/>
     <key>NSAppTransportSecurity</key>

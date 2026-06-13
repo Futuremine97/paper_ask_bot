@@ -2,6 +2,10 @@ import SwiftUI
 import AppKit
 import Carbon
 
+/// AppDelegate 등 비-SwiftUI 컨텍스트에서 현재 AppState 에 접근하기 위한 참조
+@MainActor
+enum AppRef { static weak var shared: AppState? }
+
 @MainActor
 final class AppState: ObservableObject {
     // 모델 / 선택
@@ -63,6 +67,7 @@ final class AppState: ObservableObject {
         self.hotKeyEnabled = defaults.object(forKey: "hotKeyEnabled") as? Bool ?? true
         self.sessions = HistoryStore.load()
 
+        AppRef.shared = self
         applyHotKey()
     }
 

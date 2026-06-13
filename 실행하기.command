@@ -26,6 +26,11 @@ echo "▶︎ 2/3  앱 번들 갱신 중…"
 mkdir -p "${APP}/Contents/MacOS" "${APP}/Contents/Resources"
 cp "$BIN" "${APP}/Contents/MacOS/${EXEC_NAME}"
 
+# 앱 아이콘 생성 (assets/AppIcon.iconset → AppIcon.icns)
+if [ -d "assets/AppIcon.iconset" ] && command -v iconutil >/dev/null 2>&1; then
+  iconutil -c icns "assets/AppIcon.iconset" -o "${APP}/Contents/Resources/AppIcon.icns" && echo "  ✓ 아이콘 적용"
+fi
+
 cat > "${APP}/Contents/Info.plist" <<'PLIST'
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -39,7 +44,7 @@ cat > "${APP}/Contents/Info.plist" <<'PLIST'
     <key>CFBundleShortVersionString</key><string>1.0.0</string>
     <key>CFBundlePackageType</key><string>APPL</string>
     <key>LSMinimumSystemVersion</key><string>13.0</string>
-    <key>LSUIElement</key><true/>
+    <key>CFBundleIconFile</key><string>AppIcon</string>
     <key>NSHighResolutionCapable</key><true/>
     <key>NSAppTransportSecurity</key>
     <dict>
