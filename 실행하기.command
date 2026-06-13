@@ -45,6 +45,7 @@ cat > "${APP}/Contents/Info.plist" <<'PLIST'
     <key>CFBundlePackageType</key><string>APPL</string>
     <key>LSMinimumSystemVersion</key><string>13.0</string>
     <key>CFBundleIconFile</key><string>AppIcon</string>
+    <key>LSUIElement</key><true/>
     <key>NSHighResolutionCapable</key><true/>
     <key>NSAppTransportSecurity</key>
     <dict>

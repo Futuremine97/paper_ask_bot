@@ -54,6 +54,8 @@ cat > "${APP_DIR}/Contents/Info.plist" <<PLIST
     <string>13.0</string>
     <key>CFBundleIconFile</key>
     <string>AppIcon</string>
+    <key>LSUIElement</key>
+    <true/>
     <key>NSHighResolutionCapable</key>
     <true/>
     <key>NSAppTransportSecurity</key>

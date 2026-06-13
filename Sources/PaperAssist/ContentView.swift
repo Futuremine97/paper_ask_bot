@@ -16,14 +16,15 @@ struct ContentView: View {
                 analyzeView
             }
         }
-        .frame(minWidth: 440, minHeight: 600)
+        .frame(minWidth: 380, minHeight: 480)
+        .tint(.primary)   // 미니멀 흑백: 모든 강조색을 흑/백으로
     }
 
     // MARK: - Header
 
     private var header: some View {
         HStack {
-            Image(systemName: "doc.text.magnifyingglass").foregroundStyle(.tint)
+            Image(systemName: "viewfinder").foregroundStyle(.primary)
             Text("Paper Assist").font(.headline)
             Spacer()
             Button {
@@ -96,9 +97,10 @@ struct ContentView: View {
                             Text(mode.name).font(.caption).frame(maxWidth: .infinity).padding(.vertical, 5)
                         }
                         .buttonStyle(.borderless)
-                        .background(on ? Color.accentColor : Color.secondary.opacity(0.12))
-                        .foregroundStyle(on ? Color.white : Color.primary)
+                        .background(on ? Color.primary : Color.secondary.opacity(0.12))
+                        .foregroundStyle(on ? Color(nsColor: .windowBackgroundColor) : Color.primary)
                         .clipShape(RoundedRectangle(cornerRadius: 7))
+                        .overlay(RoundedRectangle(cornerRadius: 7).stroke(Color.primary.opacity(on ? 0 : 0.18)))
                     }
                 }
             }
@@ -215,7 +217,7 @@ struct ContentView: View {
                 .textSelection(.enabled)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(8)
-                .background(isUser ? Color.accentColor.opacity(0.10) : Color.secondary.opacity(0.10))
+                .background(isUser ? Color.primary.opacity(0.06) : Color.secondary.opacity(0.12))
                 .clipShape(RoundedRectangle(cornerRadius: 8))
         }
     }

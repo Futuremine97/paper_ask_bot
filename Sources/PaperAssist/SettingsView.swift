@@ -87,10 +87,20 @@ struct SettingsView: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
 
-                Button("완료") {
-                    state.showSettings = false
+                HStack {
+                    Button("완료") {
+                        state.showSettings = false
+                    }
+                    .buttonStyle(.borderedProminent)
+
+                    Spacer()
+
+                    Button("Paper Assist 종료") {
+                        NSApplication.shared.terminate(nil)
+                    }
+                    .buttonStyle(.borderless)
+                    .foregroundStyle(.secondary)
                 }
-                .buttonStyle(.borderedProminent)
             }
             .padding(14)
         }
