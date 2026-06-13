@@ -28,6 +28,7 @@ final class AppState: ObservableObject {
     // 설정 / API 키
     @Published var anthropicKey: String { didSet { Keychain.set(anthropicKey, for: "anthropic") } }
     @Published var openaiKey: String { didSet { Keychain.set(openaiKey, for: "openai") } }
+    @Published var ollamaHost: String { didSet { defaults.set(ollamaHost, forKey: "ollamaHost") } }
     @Published var hotKeyEnabled: Bool { didSet { defaults.set(hotKeyEnabled, forKey: "hotKeyEnabled"); applyHotKey() } }
 
     // UI 상태
@@ -58,6 +59,7 @@ final class AppState: ObservableObject {
         self.prompt = FocusMode.compose(modeIDs: savedModes, extra: savedExtra)
         self.anthropicKey = Keychain.get("anthropic")
         self.openaiKey = Keychain.get("openai")
+        self.ollamaHost = defaults.string(forKey: "ollamaHost") ?? "http://localhost:11434"
         self.hotKeyEnabled = defaults.object(forKey: "hotKeyEnabled") as? Bool ?? true
         self.sessions = HistoryStore.load()
 
@@ -78,6 +80,7 @@ final class AppState: ObservableObject {
         switch provider {
         case .anthropic: return anthropicKey
         case .openai: return openaiKey
+        case .ollama: return ""   // 로컬, 키 불필요
         }
     }
 
@@ -191,7 +194,7 @@ final class AppState: ObservableObject {
     private func runCompletion() async {
         guard let model = currentModel, model.mode == .api else { return }
         let key = apiKey(for: model.provider)
-        guard !key.isEmpty else {
+        if model.provider.needsAPIKey && key.isEmpty {
             errorMessage = "\(model.provider.displayName) API 키가 설정되지 않았습니다."
             showSettings = true
             return
@@ -200,7 +203,7 @@ final class AppState: ObservableObject {
         errorMessage = nil
         defer { isLoading = false }
         do {
-            let text = try await AIClient.complete(model: model, apiKey: key, messages: conversation)
+            let text = try await AIClient.complete(model: model, apiKey: key, messages: conversation, ollamaHost: ollamaHost)
             conversation.append(ChatMessage(role: .assistant, text: text))
             saveCurrentToHistory()
         } catch {

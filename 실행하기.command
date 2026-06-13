@@ -26,7 +26,6 @@ echo "▶︎ 2/3  앱 번들 갱신 중…"
 mkdir -p "${APP}/Contents/MacOS" "${APP}/Contents/Resources"
 cp "$BIN" "${APP}/Contents/MacOS/${EXEC_NAME}"
 
-if [ ! -f "${APP}/Contents/Info.plist" ]; then
 cat > "${APP}/Contents/Info.plist" <<'PLIST'
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -42,10 +41,13 @@ cat > "${APP}/Contents/Info.plist" <<'PLIST'
     <key>LSMinimumSystemVersion</key><string>13.0</string>
     <key>LSUIElement</key><true/>
     <key>NSHighResolutionCapable</key><true/>
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsLocalNetworking</key><true/>
+    </dict>
 </dict>
 </plist>
 PLIST
-fi
 
 xattr -dr com.apple.quarantine "$APP" 2>/dev/null || true
 

@@ -8,6 +8,7 @@
 - 영역 드래그 선택 캡처 또는 전체 화면 캡처
 - 전역 단축키 **⌃⇧A** (Control+Shift+A) 로 어디서든 영역 캡처 & 분석
 - 모델 선택 (Claude Sonnet · Claude Opus · ChatGPT 5.5 Pro)
+- **Ollama 로컬 모델 지원**: API 키·인터넷 없이 로컬 비전 모델(llava, llama3.2-vision 등)로 분석. 설정에서 주소·모델 변경 가능
 - **구독(웹) 모드**: API 키 없이 기존 Claude Pro / ChatGPT Plus 구독으로 사용 (캡처 → 이미지 자동 복사 → 웹 채팅 열림 → ⌘V 붙여넣기)
 - **집중모드 다중 선택**: 요약·용어·수식·그래프·번역·코드·비판적 검토·쉽게 설명·핵심 질문·**수식→LaTeX 변환** 칩을 조합하면 프롬프트가 자동 합성
 - **후속 질문**: API 모드에서 같은 이미지에 대해 대화를 이어가며 추가 질문 가능
@@ -63,6 +64,7 @@ Xcode 가 열리면 ▶︎ (Run) 버튼으로 실행합니다.
 
 1. 메뉴바 아이콘 ▸ **설정…** 클릭
 2. **Anthropic API 키**, **OpenAI API 키** 입력 (사용할 것만 입력해도 됩니다)
+   - **Ollama(로컬)** 를 쓰려면 키가 필요 없습니다. `ollama.com` 에서 설치 후 터미널에서 `ollama pull llava` 로 비전 모델을 받고, 모델 선택에서 ‘Ollama (llava · 로컬)’ 를 고르세요. 주소 기본값은 `http://localhost:11434`.
 3. 필요하면 **모델 ID** 를 실제 API 모델명으로 수정
    - 기본값: `claude-sonnet-4-6`, `claude-opus-4-8`, `gpt-5.5-pro`
    - API 제공자의 최신 모델 ID와 다르면 여기서 바꿔 주세요.

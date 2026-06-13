@@ -47,6 +47,18 @@ struct SettingsView: View {
                     }
                 }
 
+                // Ollama (로컬)
+                section("Ollama (로컬 모델)") {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Ollama 주소").font(.caption)
+                        TextField("http://localhost:11434", text: $state.ollamaHost)
+                            .textFieldStyle(.roundedBorder)
+                        Text("API 키 없이 로컬에서 실행됩니다. 사용 전 준비:\n1) ollama.com 에서 Ollama 설치\n2) 터미널에서 비전 모델 받기 — 예) ollama pull llava\n3) 모델 선택에서 ‘Ollama (llava · 로컬)’ 선택\n\n모델 ID는 위 ‘모델 ID (API)’ 칸에서 llama3.2-vision 등으로 바꿀 수 있습니다.")
+                            .font(.caption2).foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                }
+
                 // 구독(웹) 모드 안내
                 section("구독(웹) 모드") {
                     Text("모델 선택에서 ‘Claude (구독·웹)’ 또는 ‘ChatGPT (구독·웹)’ 를 고르면 API 키 없이 사용할 수 있습니다. 캡처하면 이미지가 클립보드에 복사되고 해당 웹사이트가 열리며, ⌘V 로 붙여넣어 구독 계정으로 분석합니다.\n\n※ Claude Pro / ChatGPT Plus 구독에는 공식 API가 없어 웹에서 직접 사용하는 방식입니다.")

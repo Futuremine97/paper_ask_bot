@@ -51,6 +51,10 @@ cat > "${APP_DIR}/Contents/Info.plist" <<PLIST
     <true/>
     <key>NSHighResolutionCapable</key>
     <true/>
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsLocalNetworking</key><true/>
+    </dict>
     <key>NSHumanReadableCopyright</key>
     <string>Paper Assist</string>
 </dict>

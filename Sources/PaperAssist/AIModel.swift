@@ -4,11 +4,21 @@ import Foundation
 enum AIProvider: String, Codable, CaseIterable {
     case anthropic
     case openai
+    case ollama
 
     var displayName: String {
         switch self {
         case .anthropic: return "Anthropic (Claude)"
         case .openai: return "OpenAI (ChatGPT)"
+        case .ollama: return "Ollama (로컬)"
+        }
+    }
+
+    /// API 키가 필요한 제공자인지
+    var needsAPIKey: Bool {
+        switch self {
+        case .anthropic, .openai: return true
+        case .ollama: return false
         }
     }
 }
@@ -34,7 +44,9 @@ struct AIModel: Identifiable, Hashable, Codable {
         AIModel(id: "gpt-5.5-pro", displayName: "ChatGPT 5.5 Pro (API)", provider: .openai, mode: .api),
         // 구독(웹) 사용 — API 키 불필요
         AIModel(id: "web-claude", displayName: "Claude (구독·웹)", provider: .anthropic, mode: .web),
-        AIModel(id: "web-chatgpt", displayName: "ChatGPT (구독·웹)", provider: .openai, mode: .web)
+        AIModel(id: "web-chatgpt", displayName: "ChatGPT (구독·웹)", provider: .openai, mode: .web),
+        // 로컬 Ollama — API 키 불필요 (비전 모델 필요: ollama pull llava)
+        AIModel(id: "llava", displayName: "Ollama (llava · 로컬)", provider: .ollama, mode: .api)
     ]
 }
 
