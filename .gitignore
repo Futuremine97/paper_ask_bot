@@ -1,0 +1,9 @@
+.build/
+.DS_Store
+*.xcodeproj
+*.xcworkspace
+.swiftpm/
+
+# 빌드 결과물 / 캡처 이미지 (소스 아님)
+*.app/
+captures/

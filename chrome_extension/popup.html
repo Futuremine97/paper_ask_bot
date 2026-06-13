@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { width: 320px; margin: 0; font-family: -apple-system, system-ui, sans-serif; font-size: 13px; color: #1d1d1f; }
+    .wrap { padding: 14px; }
+    h1 { font-size: 14px; margin: 0 0 10px; display: flex; align-items: center; gap: 6px; }
+    .label { font-size: 11px; color: #6e6e73; margin: 10px 0 4px; }
+    .seg { display: flex; gap: 6px; }
+    .seg button { flex: 1; padding: 7px; border: 1px solid #d2d2d7; background: #fff; border-radius: 7px; cursor: pointer; font-size: 12px; }
+    .seg button.active { background: #0071e3; color: #fff; border-color: #0071e3; }
+    .modes { display: flex; flex-wrap: wrap; gap: 5px; }
+    .modes button { padding: 5px 9px; border: 1px solid #d2d2d7; background: #f5f5f7; color: #1d1d1f; border-radius: 14px; cursor: pointer; font-size: 11px; }
+    .modes button:hover { background: #e8e8ed; }
+    .modes button.active { background: #0071e3; color: #fff; border-color: #0071e3; }
+    input.extra { width: 100%; box-sizing: border-box; border: 1px solid #d2d2d7; border-radius: 7px; padding: 7px; font-size: 12px; font-family: inherit; }
+    textarea { width: 100%; box-sizing: border-box; height: 70px; resize: vertical; border: 1px solid #d2d2d7; border-radius: 7px; padding: 7px; font-size: 12px; font-family: inherit; }
+    .go { width: 100%; margin-top: 12px; padding: 10px; border: none; background: #0071e3; color: #fff; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
+    .go:disabled { opacity: 0.5; cursor: default; }
+    .status { margin-top: 10px; font-size: 11px; color: #6e6e73; min-height: 14px; }
+    .status.err { color: #d70015; }
+    .hint { margin-top: 8px; font-size: 10px; color: #98989d; line-height: 1.4; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>🔍 Paper Assist</h1>
+
+    <div class="label">분석 서비스</div>
+    <div class="seg" id="targetSeg">
+      <button data-target="claude" class="active">Claude</button>
+      <button data-target="chatgpt">ChatGPT</button>
+    </div>
+
+    <div class="label">집중모드 (여러 개 선택 가능)</div>
+    <div class="modes" id="modes"></div>
+
+    <div class="label">추가 요청 (선택)</div>
+    <input class="extra" id="extra" placeholder="예: 표 2의 수치를 중심으로">
+
+    <div class="label">최종 프롬프트 (자동 합성 · 수정 가능)</div>
+    <textarea id="prompt" placeholder="집중모드를 선택하면 프롬프트가 자동으로 만들어집니다"></textarea>
+
+    <button class="go" id="go">현재 탭 캡처 &amp; 분석 요청</button>
+    <div class="status" id="status"></div>
+    <div class="hint">현재 보고 있는 탭 화면을 캡처해 선택한 서비스에 자동으로 붙여넣고 전송합니다. 해당 서비스에 로그인(구독)되어 있어야 합니다.</div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

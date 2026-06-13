@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Paper Assist for Chrome",
+  "version": "1.0.0",
+  "description": "현재 탭을 캡처해 Claude / ChatGPT 구독으로 자동 분석합니다.",
+  "permissions": ["activeTab", "scripting", "storage", "tabs"],
+  "host_permissions": [
+    "https://claude.ai/*",
+    "https://chatgpt.com/*",
+    "https://chat.openai.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Paper Assist"
+  },
+  "background": {
+    "service_worker": "background.js"
+  }
+}
